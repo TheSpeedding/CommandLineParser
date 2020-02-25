@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>CMDParser</RootNamespace>
+  </PropertyGroup>
+
+	<Import Project="../../build/NLog.props" />
+	<Import Project="../../build/Analyzers.props" />
+	<Import Project="../../build/Build.props" />
+
+</Project>
