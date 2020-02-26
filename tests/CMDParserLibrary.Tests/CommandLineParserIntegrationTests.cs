@@ -1,10 +1,13 @@
-﻿using static CMDParser.OptionFactory;
+using Xunit;
 
-namespace CMDParser.Demo
+using static CMDParser.OptionFactory;
+
+namespace CMDParser.Tests
 {
-	public class Program
+	public class CommandLineParserIntegrationTests
 	{
-		public class TimeCommandLine
+		#region Helper classes
+		private class TimeCommandLine
 		{
 			public string OutputFormat { get; set; }
 
@@ -20,8 +23,10 @@ namespace CMDParser.Demo
 
 			public bool ShouldPrintVersion { get; set; }
 		}
+		#endregion
 
-		private static ICommandLineParser GetTimeParser(TimeCommandLine output)
+		#region Helper methods
+		private static ICommandLineParser CreateTimeCommandParser(TimeCommandLine output)
 		{
 			var parserBuilder = new CommandLineParserBuilder();
 
@@ -55,13 +60,25 @@ namespace CMDParser.Demo
 
 			return parserBuilder.CreateParser();
 		}
+		#endregion
 
-		private static void Main(string[] args)
+		[Fact]
+		public void FunctionalRequirementsExample_ParserWorksCorrectly()
 		{
-			// The parser will parse the output into `output` instance.
-			var output = new TimeCommandLine();
+			// Arrange.
+			var args = "-f MyFormat -a -v --output=MyFile arg1 arg2".Split(' ');
 
-			GetTimeParser(output).Parse(args);
+			var output = new TimeCommandLine();
+			var parser = CreateTimeCommandParser(output);
+
+			// Act.
+			parser.Parse(args);
+
+			// Assert.
+			Assert.Equal("MyFormat", output.OutputFormat);
+			Assert.Equal("MyFile", output.OutputFile);
+			Assert.True(output.ShouldAppend);
+			Assert.True(output.IsOutputVerbose);
 		}
 	}
 }

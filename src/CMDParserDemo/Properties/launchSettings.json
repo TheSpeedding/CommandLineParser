@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "CMDParserDemo": {
-      "commandName": "Project",
-      "commandLineArgs": "-f MyFormat -a -v --output=MyFile"
-    }
-  }
-}
