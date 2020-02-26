@@ -32,7 +32,10 @@ namespace CMDParser
 
 		public OptionSetupBuilder<TParsedType> Callback(Action<TParsedType> callback)
 		{
-			throw new NotImplementedException();
+			foreach (var s in _setup)
+				s.Callback = x => callback((TParsedType)x);
+
+			return this;
 		}
 	}
 }

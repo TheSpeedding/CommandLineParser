@@ -7,7 +7,10 @@ namespace CMDParser.Internals.Options
 {
 	internal class LongOption : Option
 	{
-		protected override string Prefix => "--";
+		public const string OptionPrefix = "--";
+		public const string AssignmentOperator = "=";
+
+		protected override string Prefix => OptionPrefix;
 
 		public LongOption(string id) : base(id)
 		{

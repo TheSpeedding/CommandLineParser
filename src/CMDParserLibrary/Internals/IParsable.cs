@@ -5,8 +5,8 @@ using System.Text;
 
 namespace CMDParser.Internals
 {
-	interface IParsable
+	internal interface IParsable
 	{
-		bool TryParse(string input, [NotNullWhen(returnValue: true)] out string? parsed);
+		bool TryParse(InputProcessor input, [NotNullWhen(returnValue: true)] out string? parsed);
 	}
 }

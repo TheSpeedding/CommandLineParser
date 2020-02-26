@@ -7,7 +7,9 @@ namespace CMDParser.Internals.Options
 {
 	internal class ShortOption : Option
 	{
-		protected override string Prefix => "-";
+		public const string OptionPrefix = "-";
+
+		protected override string Prefix => OptionPrefix;
 
 		public ShortOption(string id) : base(id)
 		{

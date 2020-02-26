@@ -6,10 +6,12 @@ namespace CMDParser.Internals.Options
 {
 	interface IOptionSetup : IParsable
 	{
-		public Option OptionIdentifier { get; }
+		public IParsable OptionIdentifier { get; }
 
 		public ParameterAppearance ParameterOptions { get; }
 		
 		public OptionAppearance Appearance { get; }
+
+		public Action<object> Callback { get; }
 	}
 }

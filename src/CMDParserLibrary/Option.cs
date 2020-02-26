@@ -17,11 +17,12 @@ namespace CMDParser
 			Identifier = id;
 		}
 
-		public bool TryParse(string input, [NotNullWhen(true)] out string? parsed)
+		bool IParsable.TryParse(InputProcessor input, [NotNullWhen(true)] out string? parsed)
 		{
-			if (input == Prefix + Identifier)
+			if (input.CurrentToken == Prefix + Identifier)
 			{
 				parsed = Prefix + Identifier;
+				input.MoveNext();
 				return true;
 			}
 			else
