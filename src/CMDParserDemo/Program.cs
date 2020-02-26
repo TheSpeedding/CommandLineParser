@@ -21,10 +21,8 @@ namespace CMDParser.Demo
 			public bool ShouldPrintVersion { get; set; }
 		}
 
-		static void Main(string[] args)
+		private static ICommandLineParser GetTimeParser(TimeCommandLine output)
 		{
-			var output = new TimeCommandLine();
-
 			var parserBuilder = new CommandLineParserBuilder();
 
 			parserBuilder.SetupOption<string>(Short('f'), Long("format"))
@@ -55,9 +53,15 @@ namespace CMDParser.Demo
 				.Callback(shouldPrintVersion => output.ShouldPrintVersion = shouldPrintVersion)
 				.NoParameterRequired();
 
-			var parser = parserBuilder.CreateParser();
+			return parserBuilder.CreateParser();
+		}
 
-			parser.Parse(args);
+		private static void Main(string[] args)
+		{
+			// The parser will parse the output into `output` instance.
+			var output = new TimeCommandLine();
+
+			GetTimeParser(output).Parse(args);
 		}
 	}
 }

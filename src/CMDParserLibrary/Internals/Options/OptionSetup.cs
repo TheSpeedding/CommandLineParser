@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
@@ -9,7 +10,7 @@ namespace CMDParser.Internals.Options
 	{
 		private readonly IParserMethodsView _parsers;
 
-		public IParsable OptionIdentifier { get; set; }
+		public Option OptionIdentifier { get; set; }
 
 		public ParameterAppearance ParameterOptions { get; set; }
 
@@ -35,6 +36,7 @@ namespace CMDParser.Internals.Options
 				{
 					// Option is present at input, but accepts no arguments, thus is intended to return `true`.
 					case ParameterAppearance.None:
+						// TODO: Call callback with "true" argument somehow.
 						Callback(default!);
 						return true;
 

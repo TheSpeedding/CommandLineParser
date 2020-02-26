@@ -6,7 +6,7 @@ namespace CMDParser.Internals.Options
 {
 	interface IOptionSetup<TParsedType> : IParsable
 	{
-		public IParsable OptionIdentifier { get; }
+		public Option OptionIdentifier { get; }
 
 		public ParameterAppearance ParameterOptions { get; }
 		
