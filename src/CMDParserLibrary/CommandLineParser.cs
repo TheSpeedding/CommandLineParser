@@ -4,9 +4,15 @@ using System.Text;
 
 namespace CMDParser
 {
-	public class CommandLineParserBuilder
+	public class CommandLineParser
 	{		
-		public OptionSetupBuilder<TParsedType> Setup<TParsedType>(params IOption[] option)
+
+		public void RegisterParser<TParsedType>(Func<string, TParsedType> parser)
+		{
+
+		}
+
+		public OptionSetupBuilder<TParsedType> SetupOption<TParsedType>(params IOption[] option)
 		{
 			throw new NotImplementedException();
 		}
