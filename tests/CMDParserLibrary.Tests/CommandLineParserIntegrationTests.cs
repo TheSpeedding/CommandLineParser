@@ -58,7 +58,7 @@ namespace CMDParser.Tests
 		#endregion
 
 		[Fact]
-		public void FunctionalRequirementsExample_ParserWorksCorrectly()
+		public void FunctionalRequirements_TimeExample_ParserWorksCorrectly()
 		{
 			// Arrange.
 			var args = "-f MyFormat -a -v --output=MyFile -- -arg0 arg1 --arg2".Split(' ');
@@ -72,8 +72,10 @@ namespace CMDParser.Tests
 			// Assert.
 			Assert.Equal("MyFormat", output.OutputFormat);
 			Assert.Equal("MyFile", output.OutputFile);
+
 			Assert.True(output.ShouldAppend);
 			Assert.True(output.IsOutputVerbose);
+			Assert.False(output.IsPortable);
 
 			Assert.Contains("-arg0", parsedArgs);
 			Assert.Contains("arg1", parsedArgs);
