@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CMDParser
 {
-	public class CommandLineParser
+	public class CommandLineParserBuilder
 	{
 		private readonly ParserMethodsCollection _parsers = new ParserMethodsCollection();
 
@@ -19,11 +19,9 @@ namespace CMDParser
 			throw new NotImplementedException();
 		}
 
-		public void Parse(string[] args)
+		public ICommandLineParser CreateParser()
 		{
-			var inputProcessor = new InputProcessor(args);
-
-			inputProcessor.GetRemainingInput().StartsWith
+			return new CommandLineParser(_parsers);
 		}
 	}
 }

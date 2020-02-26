@@ -12,7 +12,7 @@ namespace CMDParser
 
 		public string Identifier { get; }
 
-		public Option(string id)
+		protected Option(string id)
 		{
 			Identifier = id;
 		}
