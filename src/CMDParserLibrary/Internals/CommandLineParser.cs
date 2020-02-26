@@ -9,6 +9,8 @@ namespace CMDParser.Internals
 {
 	class CommandLineParser : ICommandLineParser
 	{
+		private const string ArgumentsDelimiter = "--";
+
 		private readonly IReadOnlyDictionary<Option, Func<InputProcessor, bool>> _optionParsers;
 		private readonly IReadOnlyDictionary<Option, IOptionInfo> _optionInfos;
 
@@ -24,7 +26,7 @@ namespace CMDParser.Internals
 			throw new NotImplementedException();
 		}
 
-		public void Parse(string[] args)
+		public IEnumerable<string> Parse(string[] args)
 		{
 			var input = new InputProcessor(args);
 
@@ -37,8 +39,17 @@ namespace CMDParser.Internals
 			// Auxilary set for options that were already parsed (to prevent parsing the same option multiple times).
 			var alreadyParsed = new HashSet<Option>();
 
+			// Denotes whether the delimiter for arguments has already been reached or not.
+			var delimiterReached = false;
+
+			var parsedArguments = new List<string>();
+
 			while (input.AnyInputLeft)
 			{
+				if (input.CurrentToken == ArgumentsDelimiter)
+				{
+					delimiterReached = true;
+				}
 				if (TryParseOption(input, mandatoryOptions, out var parsedOption))
 				{
 					if (alreadyParsed.Contains(parsedOption))
@@ -51,6 +62,10 @@ namespace CMDParser.Internals
 						alreadyParsed.Add(parsedOption);
 					}
 				}
+				else if (TryParseArgument(input, delimiterReached, out var argument))
+				{
+					parsedArguments.Add(argument);
+				}
 				else
 				{
 					throw new IncorrectInputException(
@@ -62,6 +77,25 @@ namespace CMDParser.Internals
 			if (mandatoryOptions.Count > 0)
 				throw new IncorrectInputException("Not all the mandatory options were parsed. These are: " +
 					string.Join(", ", mandatoryOptions.Select(x => "\"" + x.Identifier + "\"")));
+
+			return parsedArguments;
+		}
+
+		private bool TryParseArgument(InputProcessor input, bool delimiterReached, [NotNullWhen(true)] out string? argument)
+		{
+			if (delimiterReached
+				|| !input.CurrentToken.StartsWith(ShortOption.OptionPrefix)
+				|| !input.CurrentToken.StartsWith(LongOption.OptionPrefix))
+			{
+				argument = input.CurrentToken;
+				input.MoveNext();
+				return true;
+			}
+			else
+			{
+				argument = null;
+				return false;
+			}
 		}
 
 		private bool TryParseOption(InputProcessor input, ISet<Option> mandatoryOptions, [NotNullWhen(true)] out Option? parsedOption)

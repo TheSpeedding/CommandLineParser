@@ -61,19 +61,23 @@ namespace CMDParser.Tests
 		public void FunctionalRequirementsExample_ParserWorksCorrectly()
 		{
 			// Arrange.
-			var args = "-f MyFormat -a -v --output=MyFile arg1 arg2".Split(' ');
+			var args = "-f MyFormat -a -v --output=MyFile -- -arg0 arg1 --arg2".Split(' ');
 
 			var output = new TimeCommandLine();
 			var parser = CreateTimeCommandParser(output);
 
 			// Act.
-			parser.Parse(args);
+			var parsedArgs = parser.Parse(args);
 
 			// Assert.
 			Assert.Equal("MyFormat", output.OutputFormat);
 			Assert.Equal("MyFile", output.OutputFile);
 			Assert.True(output.ShouldAppend);
 			Assert.True(output.IsOutputVerbose);
+
+			Assert.Contains("-arg0", parsedArgs);
+			Assert.Contains("arg1", parsedArgs);
+			Assert.Contains("--arg2", parsedArgs);
 		}
 	}
 }
