@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CMDParser.Internals.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -9,10 +10,7 @@ namespace CMDParser.Internals.Options
 	internal class OptionSetup<TParsedType> : IOptionSetup<TParsedType>
 	{
 		private readonly IParserMethodsView _parsers;
-
-		// We need this because `Option` implements `IParsable` explicitly.
-		private IParsable ParsableIdentifier => OptionIdentifier;
-
+		
 		public Option OptionIdentifier { get; }
 
 		public Appearance ParameterAppearance { get; set; } = Appearance.Optional;
@@ -29,7 +27,7 @@ namespace CMDParser.Internals.Options
 
 		public bool TryParse(InputProcessor input)
 		{
-			if (!ParsableIdentifier.TryParse(input))
+			if (!OptionIdentifier.AsParsable().TryParse(input))
 			{
 				return false;
 			}
@@ -77,6 +75,22 @@ namespace CMDParser.Internals.Options
 			var arg = input.CurrentToken;
 			input.MoveNext();
 			return _parsers.Parse<TParsedType>(arg);
+		}
+
+		public bool Equals(IOptionInfo? other)
+		{
+			return other != null && OptionAppearance == other.OptionAppearance &&
+				ParameterAppearance == other.ParameterAppearance && OptionIdentifier.Equals(other.OptionIdentifier);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as IOptionInfo);
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(OptionAppearance, ParameterAppearance, OptionIdentifier);
 		}
 	}
 }

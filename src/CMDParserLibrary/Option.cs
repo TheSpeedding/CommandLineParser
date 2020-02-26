@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CMDParser
 {
-	public abstract class Option : IParsable
+	public abstract class Option : IParsable, IEquatable<Option>
 	{
 		protected abstract string Prefix { get; }
 
@@ -28,6 +28,21 @@ namespace CMDParser
 			{
 				return false;
 			}
+		}
+
+		public virtual bool Equals(Option? other)
+		{
+			return other != null && Identifier == other.Identifier && Prefix == other.Prefix;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as Option);
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(Identifier, Prefix);
 		}
 	}
 }

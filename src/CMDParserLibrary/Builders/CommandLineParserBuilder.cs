@@ -13,12 +13,12 @@ namespace CMDParser
 		private readonly ParserMethodsCollection _parserMethods = new ParserMethodsCollection();
 
 		// A collection of method that can parse options. Returns `true` when parsed successfully.
-		private readonly Dictionary<Option, Func<InputProcessor, bool>> _options = new Dictionary<Option, Func<InputProcessor, bool>>();
+		private readonly Dictionary<Option, Func<InputProcessor, bool>> _optionParsers 
+			= new Dictionary<Option, Func<InputProcessor, bool>>();
 
-		// A map from option to a function which returns option appearance.
-		// The value must be a function because we want to be able to set the appearance from
-		// `OptionSetupBuilder`, but we cannot provide any backward reference reflecting dynamic setting of the property.
-		private readonly Dictionary<Option, Func<Appearance>> _optionsApperance = new Dictionary<Option, Func<Appearance>>();
+		// A map from option to a its info.
+		private readonly Dictionary<Option, IOptionInfo> _optionInfos
+			= new Dictionary<Option, IOptionInfo>();
 
 		public void RegisterParser<TParsedType>(Func<string, TParsedType> parser)
 		{
@@ -37,7 +37,7 @@ namespace CMDParser
 
 		public ICommandLineParser CreateParser()
 		{
-			return new CommandLineParser(_options, _optionsApperance);
+			return new CommandLineParser(_optionParsers, _optionInfos);
 		}
 
 		private IReadOnlyCollection<OptionSetup<T>> PrepareOptionSetups<T>(Option[] option)
@@ -46,8 +46,8 @@ namespace CMDParser
 
 			foreach (var o in optionSetups)
 			{
-				_options.Add(o.OptionIdentifier, o.TryParse);
-				_optionsApperance.Add(o.OptionIdentifier, () => o.OptionAppearance);
+				_optionParsers.Add(o.OptionIdentifier, o.TryParse);
+				_optionInfos.Add(o.OptionIdentifier, o);
 			}
 
 			return optionSetups;

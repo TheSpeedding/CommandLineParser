@@ -7,5 +7,7 @@ namespace CMDParser
 	public interface ICommandLineParser
 	{
 		void Parse(string[] args);
+
+		string PrintHelp();
 	}
 }
