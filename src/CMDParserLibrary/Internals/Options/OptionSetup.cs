@@ -10,11 +10,14 @@ namespace CMDParser.Internals.Options
 	{
 		private readonly IParserMethodsView _parsers;
 
-		public Option OptionIdentifier { get; set; }
+		// We need this because `Option` implements `IParsable` explicitly.
+		private IParsable ParsableIdentifier => OptionIdentifier;
 
-		public ParameterAppearance ParameterOptions { get; set; }
+		public Option OptionIdentifier { get; }
 
-		public OptionAppearance Appearance { get; set; }
+		public ParameterAppearance ParameterOptions { get; set; } = ParameterAppearance.Optional;
+
+		public OptionAppearance Appearance { get; set; } = OptionAppearance.Optional;
 
 		public Action<TParsedType> Callback { get; set; } = _ => { };
 
@@ -26,7 +29,7 @@ namespace CMDParser.Internals.Options
 
 		public bool TryParse(InputProcessor input)
 		{
-			if (!OptionIdentifier.TryParse(input))
+			if (!ParsableIdentifier.TryParse(input))
 			{
 				return false;
 			}

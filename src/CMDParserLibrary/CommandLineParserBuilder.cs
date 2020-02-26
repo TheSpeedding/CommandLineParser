@@ -41,7 +41,7 @@ namespace CMDParser
 
 		public ICommandLineParser CreateParser()
 		{
-			return new CommandLineParser(_options.Values, _optionsApperance);
+			return new CommandLineParser(_options, _optionsApperance);
 		}
 	}
 }
