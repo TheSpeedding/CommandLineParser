@@ -19,7 +19,7 @@ namespace CMDParser
 
 		public OptionSetupBuilder<TParsedType> SetupOption<TParsedType>(params Option[] option)
 		{
-			var optionSetups = option.Select(x => new OptionSetup(x));
+			var optionSetups = option.Select(x => new OptionSetup(x, _parsers));
 
 			foreach (var o in optionSetups)
 				_options.Add(o);

@@ -6,6 +6,6 @@ namespace CMDParser.Internals
 {
 	internal interface IParserMethodsView
 	{
-		void RegisterParseMethod<TParsedType>(Func<string, TParsedType> parser);
+		TParsedType Parse<TParsedType>(string input);
 	}
 }

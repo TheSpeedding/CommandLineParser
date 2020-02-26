@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CMDParser.Internals.Options
 {
-	interface IOptionSetup : IParsable
+	interface IOptionSetup<TParsedType> : IParsable
 	{
 		public IParsable OptionIdentifier { get; }
 
@@ -12,6 +12,6 @@ namespace CMDParser.Internals.Options
 		
 		public OptionAppearance Appearance { get; }
 
-		public Action<object> Callback { get; }
+		public Action<TParsedType> Callback { get; }
 	}
 }

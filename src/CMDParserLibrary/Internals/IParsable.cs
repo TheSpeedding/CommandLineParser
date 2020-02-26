@@ -7,6 +7,6 @@ namespace CMDParser.Internals
 {
 	internal interface IParsable
 	{
-		bool TryParse(InputProcessor input, [NotNullWhen(returnValue: true)] out string? parsed);
+		bool TryParse(InputProcessor input);
 	}
 }

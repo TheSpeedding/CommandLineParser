@@ -5,26 +5,28 @@ using System.Text;
 
 namespace CMDParser.Internals.Options
 {
-	class OptionSetup : IOptionSetup
+	class OptionSetup<TParsedType> : IOptionSetup<TParsedType>
 	{
+		private readonly IParserMethodsView _parsers;
+
 		public IParsable OptionIdentifier { get; set; }
 
 		public ParameterAppearance ParameterOptions { get; set; }
 
 		public OptionAppearance Appearance { get; set; }
 
-		public Action<object> Callback { get; set; } = _ => { };
+		public Action<TParsedType> Callback { get; set; } = _ => { };
 
-		public OptionSetup(Option option)
+		public OptionSetup(Option option, IParserMethodsView parsers)
 		{
 			OptionIdentifier = option;
+			_parsers = parsers;
 		}
 
-		public bool TryParse(InputProcessor input, [NotNullWhen(true)] out string? parsed)
+		public bool TryParse(InputProcessor input)
 		{
-			if (!OptionIdentifier.TryParse(input, out var parsedIdentifier))
+			if (!OptionIdentifier.TryParse(input))
 			{
-				parsed = null;
 				return false;
 			}
 			else
@@ -33,38 +35,37 @@ namespace CMDParser.Internals.Options
 				{
 					// Option is present at input, but accepts no arguments, thus is intended to return `true`.
 					case ParameterAppearance.None:
-						parsed = parsedIdentifier;
-						Callback(true); // TODO: This can cail if the input is incorrect, i.e., throw BadCastException.
+						Callback(default!);
 						break;
 
 					case ParameterAppearance.Optional:
 						if (input.CurrentToken.StartsWith(LongOption.OptionPrefix) || input.CurrentToken.StartsWith(ShortOption.OptionPrefix))
 						{
 							// Then the argument is non-present, skip it.
-							parsed = parsedIdentifier;
-							Callback(true);
+							Callback(default!);
 							break;
 						}
 						else
 						{
 							// Otherwise the argument is present.
-							var arg = input.CurrentToken;
-							input.MoveNext();
-
-							// TODO: Parse it using a parser and call callback.
+							Callback(ParseArgument(input));
 						}
 						break;
 
 					case ParameterAppearance.Required:
+						Callback(ParseArgument(input));
 						break;
 				}
 			}
+
+			throw new InvalidOperationException("Unreachable code detected.");
 		}
 
-		private bool TryParseArgument(InputProcessor input, [NotNullWhen(true)] out string? parsed)
+		private TParsedType ParseArgument(InputProcessor input)
 		{
-
+			var arg = input.CurrentToken;
+			input.MoveNext();
+			return _parsers.Parse<TParsedType>(arg);
 		}
-
 	}
 }
