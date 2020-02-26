@@ -8,7 +8,7 @@ namespace CMDParser
 {
 	public abstract class Option : IParsable, IEquatable<Option>
 	{
-		protected abstract string Prefix { get; }
+		public abstract string Prefix { get; }
 
 		public string Identifier { get; }
 

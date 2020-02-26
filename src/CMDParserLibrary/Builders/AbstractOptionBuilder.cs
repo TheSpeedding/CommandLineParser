@@ -24,7 +24,15 @@ namespace CMDParser.Builders
 
 			return Instance;
 		}
-		
+
+		public TBuilder WithDescription(string description)
+		{
+			foreach (var s in Setup)
+				s.Description = description;
+
+			return Instance;
+		}
+
 		public TBuilder Callback(Action<TParsedType> callback)
 		{
 			foreach (var s in Setup)

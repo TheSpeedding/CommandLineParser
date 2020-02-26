@@ -15,7 +15,7 @@ namespace CMDParser.Internals
 		{
 			_descriptions = optionInfos
 				.Where(x => !string.IsNullOrEmpty(x.Description))
-				.ToDictionary(x => x.OptionIdentifier.Identifier, x => x.Description);
+				.ToDictionary(x => x.OptionIdentifier.Prefix + x.OptionIdentifier.Identifier, x => x.Description);
 		}
 
 		public string GetDescription(string optionIdentifier)
@@ -29,7 +29,7 @@ namespace CMDParser.Internals
 		public string Stringify()
 		{
 			// Group options by their descriptions.
-			var groupedOptions = _descriptions.GroupBy(x => x.Value, x => x.Key);
+			var groupedOptions = _descriptions.GroupBy(x => x.Value, x => "\"" + x.Key + "\"");
 
 			var sb = new StringBuilder();
 
