@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CMDParser.Options
+namespace CMDParser.Internals.Options
 {
 	internal class LongOption : IOption
 	{

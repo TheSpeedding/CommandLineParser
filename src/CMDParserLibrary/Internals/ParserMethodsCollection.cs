@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CMDParser
+namespace CMDParser.Internals
 {
 	class ParserMethodsCollection : IParserMethodsView
 	{
@@ -11,6 +11,7 @@ namespace CMDParser
 		public ParserMethodsCollection()
 		{
 			RegisterParseMethod(s => s); // Identity parser for strings.
+
 			RegisterParseMethod(x => int.Parse(x));
 			RegisterParseMethod(x => uint.Parse(x));
 			RegisterParseMethod(x => long.Parse(x));
@@ -18,6 +19,8 @@ namespace CMDParser
 			RegisterParseMethod(x => byte.Parse(x));
 			RegisterParseMethod(x => sbyte.Parse(x));
 			RegisterParseMethod(x => bool.Parse(x));
+
+			RegisterParseMethod(x => x.Split(' '));
 		}
 
 		public void RegisterParseMethod<TParsedType>(Func<string, TParsedType> parser)

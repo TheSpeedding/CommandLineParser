@@ -1,4 +1,4 @@
-﻿using static CMDParser.Options.OptionFactory;
+﻿using static CMDParser.OptionFactory;
 
 namespace CMDParser.Demo
 {
@@ -27,31 +27,31 @@ namespace CMDParser.Demo
 
 			var parser = new CommandLineParser();
 
-			parser.SetupOption<string>(CreateShort('f'), CreateLong("format"))
+			parser.SetupOption<string>(Short('f'), Long("format"))
 				.Callback(format => output.OutputFormat = format)
 				.ParameterRequired();
 
-			parser.SetupOption<bool>(CreateShort('p'), CreateLong("portability"))
+			parser.SetupOption<bool>(Short('p'), Long("portability"))
 				.Callback(isPortable => output.IsPortable = isPortable)
 				.NoParameterRequired();
 
-			parser.SetupOption<string>(CreateShort('o'), CreateLong("output"))
+			parser.SetupOption<string>(Short('o'), Long("output"))
 				.Callback(file => output.OutputFile = file)
 				.ParameterRequired();
 
-			parser.SetupOption<bool>(CreateShort('a'), CreateLong("append"))
+			parser.SetupOption<bool>(Short('a'), Long("append"))
 				.Callback(shouldAppend => output.ShouldAppend = shouldAppend)
 				.NoParameterRequired();
 
-			parser.SetupOption<bool>(CreateShort('v'), CreateLong("verbose"))
+			parser.SetupOption<bool>(Short('v'), Long("verbose"))
 				.Callback(isVerbose => output.IsOutputVerbose = isVerbose)
 				.NoParameterRequired();
 
-			parser.SetupOption<bool>(CreateLong("help"))
+			parser.SetupOption<bool>(Long("help"))
 				.Callback(shouldPrintHelp => output.ShouldPrintHelp = shouldPrintHelp)
 				.NoParameterRequired();
 
-			parser.SetupOption<bool>(CreateShort('V'), CreateLong("version"))
+			parser.SetupOption<bool>(Short('V'), Long("version"))
 				.Callback(shouldPrintVersion => output.ShouldPrintVersion = shouldPrintVersion)
 				.NoParameterRequired();
 

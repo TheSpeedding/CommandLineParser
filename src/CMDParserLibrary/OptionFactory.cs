@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CMDParser.Options
+namespace CMDParser
 {
 	public static class OptionFactory
 	{
-		public static IOption CreateShort(char identifier)
+		public static IOption Short(char identifier)
 		{
 			throw new NotImplementedException();
 		}
 
-		public static IOption CreateLong(string identifier)
+		public static IOption Long(string identifier)
 		{
 			throw new NotImplementedException();
 		}
