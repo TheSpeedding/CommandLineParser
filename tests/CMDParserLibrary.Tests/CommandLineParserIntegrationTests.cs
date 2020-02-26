@@ -34,29 +34,24 @@ namespace CMDParser.Tests
 				.Callback(format => output.OutputFormat = format)
 				.ParameterRequired();
 
-			parserBuilder.SetupOption<bool>(Short('p'), Long("portability"))
-				.Callback(isPortable => output.IsPortable = isPortable)
-				.NoParameterRequired();
+			parserBuilder.SetupOption(Short('p'), Long("portability"))
+				.Callback(_ => output.IsPortable = true);
 
 			parserBuilder.SetupOption<string>(Short('o'), Long("output"))
 				.Callback(file => output.OutputFile = file)
 				.ParameterRequired();
 
-			parserBuilder.SetupOption<bool>(Short('a'), Long("append"))
-				.Callback(shouldAppend => output.ShouldAppend = shouldAppend)
-				.NoParameterRequired();
+			parserBuilder.SetupOption(Short('a'), Long("append"))
+				.Callback(_ => output.ShouldAppend = true);
 
-			parserBuilder.SetupOption<bool>(Short('v'), Long("verbose"))
-				.Callback(isVerbose => output.IsOutputVerbose = isVerbose)
-				.NoParameterRequired();
+			parserBuilder.SetupOption(Short('v'), Long("verbose"))
+				.Callback(isVerbose => output.IsOutputVerbose = true);
 
-			parserBuilder.SetupOption<bool>(Long("help"))
-				.Callback(shouldPrintHelp => output.ShouldPrintHelp = shouldPrintHelp)
-				.NoParameterRequired();
+			parserBuilder.SetupOption(Long("help"))
+				.Callback(_ => output.ShouldPrintHelp = true);
 
-			parserBuilder.SetupOption<bool>(Short('V'), Long("version"))
-				.Callback(shouldPrintVersion => output.ShouldPrintVersion = shouldPrintVersion)
-				.NoParameterRequired();
+			parserBuilder.SetupOption(Short('V'), Long("version"))
+				.Callback(_ => output.ShouldPrintVersion = true);
 
 			return parserBuilder.CreateParser();
 		}

@@ -15,9 +15,9 @@ namespace CMDParser.Internals.Options
 
 		public Option OptionIdentifier { get; }
 
-		public ParameterAppearance ParameterOptions { get; set; } = ParameterAppearance.Optional;
+		public Appearance ParameterAppearance { get; set; } = Appearance.Optional;
 
-		public OptionAppearance Appearance { get; set; } = OptionAppearance.Optional;
+		public Appearance OptionAppearance { get; set; } = Appearance.Optional;
 
 		public Action<TParsedType> Callback { get; set; } = _ => { };
 
@@ -35,34 +35,41 @@ namespace CMDParser.Internals.Options
 			}
 			else
 			{
-				switch (ParameterOptions)
+				if (typeof(TParsedType) == typeof(Void))
 				{
-					// Option is present at input, but accepts no arguments, thus is intended to return `true`.
-					case ParameterAppearance.None:
-						// TODO: Call callback with "true" argument somehow.
+					// Option is intended to have no arguments.
+					Callback(default!);
+					return true;
+				}
+
+				else if (ParameterAppearance == Appearance.Optional)
+				{
+					if (input.CurrentToken.StartsWith(LongOption.OptionPrefix) || input.CurrentToken.StartsWith(ShortOption.OptionPrefix))
+					{
+						// Then the argument is non-present, skip it.
 						Callback(default!);
 						return true;
+					}
 
-					case ParameterAppearance.Optional:
-						if (input.CurrentToken.StartsWith(LongOption.OptionPrefix) || input.CurrentToken.StartsWith(ShortOption.OptionPrefix))
-						{
-							// Then the argument is non-present, skip it.
-							Callback(default!);
-						}
-						else
-						{
-							// Otherwise the argument is present.
-							Callback(ParseArgument(input));
-						}
-						return true;
-
-					case ParameterAppearance.Required:
+					else
+					{
+						// Otherwise the argument is present.
 						Callback(ParseArgument(input));
 						return true;
+					}
+				}
+
+				else if (ParameterAppearance == Appearance.Required)
+				{
+					Callback(ParseArgument(input));
+					return true;
+				}
+
+				else
+				{
+					return false;
 				}
 			}
-
-			throw new InvalidOperationException("Unreachable code detected.");
 		}
 
 		private TParsedType ParseArgument(InputProcessor input)

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CMDParser.Internals.Options
 {
-	enum OptionAppearance
+	enum Appearance
 	{
 		Optional,
 		Required

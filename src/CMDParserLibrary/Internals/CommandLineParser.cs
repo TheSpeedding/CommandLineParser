@@ -9,10 +9,10 @@ namespace CMDParser.Internals
 	class CommandLineParser : ICommandLineParser
 	{
 		private readonly IReadOnlyDictionary<Option, Func<InputProcessor, bool>> _options;
-		private readonly IReadOnlyDictionary<Option, Func<OptionAppearance>> _optionsAppearance;
+		private readonly IReadOnlyDictionary<Option, Func<Appearance>> _optionsAppearance;
 
 		public CommandLineParser(IReadOnlyDictionary<Option, Func<InputProcessor, bool>> options, 
-			IReadOnlyDictionary<Option, Func<OptionAppearance>> optionsAppearance)
+			IReadOnlyDictionary<Option, Func<Appearance>> optionsAppearance)
 		{
 			_options = options;
 			_optionsAppearance = optionsAppearance;
@@ -23,7 +23,7 @@ namespace CMDParser.Internals
 			var input = new InputProcessor(args);
 
 			// Collect mandatory options.
-			var mandatoryOptions = _optionsAppearance.Where(x => x.Value() == OptionAppearance.Required).Select(x => x.Key).ToHashSet();
+			var mandatoryOptions = _optionsAppearance.Where(x => x.Value() == Appearance.Required).Select(x => x.Key).ToHashSet();
 
 			while (input.AnyInputLeft)
 				if (!TryParseOption(input, mandatoryOptions))

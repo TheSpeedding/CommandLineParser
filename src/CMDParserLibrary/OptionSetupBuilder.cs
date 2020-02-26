@@ -15,10 +15,10 @@ namespace CMDParser
 			_setup = setup;
 		}
 		
-		public OptionSetupBuilder<TParsedType> Required()
+		public OptionSetupBuilder<TParsedType> OptionRequired()
 		{
 			foreach (var s in _setup)
-				s.Appearance = OptionAppearance.Required;
+				s.OptionAppearance = Appearance.Required;
 
 			return this;
 		}
@@ -26,15 +26,7 @@ namespace CMDParser
 		public OptionSetupBuilder<TParsedType> ParameterRequired()
 		{
 			foreach (var s in _setup)
-				s.ParameterOptions = ParameterAppearance.Required;
-
-			return this;
-		}
-
-		public OptionSetupBuilder<TParsedType> NoParameterRequired()
-		{
-			foreach (var s in _setup)
-				s.ParameterOptions = ParameterAppearance.None;
+				s.ParameterAppearance = Appearance.Required;
 
 			return this;
 		}

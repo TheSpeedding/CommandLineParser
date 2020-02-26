@@ -18,7 +18,7 @@ namespace CMDParser
 		// A map from option to a function which returns option appearance.
 		// The value must be a function because we want to be able to set the appearance from
 		// `OptionSetupBuilder`, but we cannot provide any backward reference reflecting dynamic setting of the property.
-		private readonly Dictionary<Option, Func<OptionAppearance>> _optionsApperance = new Dictionary<Option, Func<OptionAppearance>>();
+		private readonly Dictionary<Option, Func<Appearance>> _optionsApperance = new Dictionary<Option, Func<Appearance>>();
 
 		public void RegisterParser<TParsedType>(Func<string, TParsedType> parser)
 		{
@@ -32,11 +32,15 @@ namespace CMDParser
 			foreach (var o in optionSetups)
 			{
 				_options.Add(o.OptionIdentifier, o.TryParse);
-				_optionsApperance.Add(o.OptionIdentifier, () => o.Appearance);
+				_optionsApperance.Add(o.OptionIdentifier, () => o.OptionAppearance);
 			}
 
 			return new OptionSetupBuilder<TParsedType>(optionSetups);
+		}
 
+		public OptionSetupBuilder<Void> SetupOption(params Option[] option)
+		{
+			return SetupOption<Void>(option);
 		}
 
 		public ICommandLineParser CreateParser()
