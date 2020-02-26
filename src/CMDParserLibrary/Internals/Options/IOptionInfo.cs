@@ -11,5 +11,7 @@ namespace CMDParser.Internals.Options
 		public Appearance ParameterAppearance { get; }
 
 		public Appearance OptionAppearance { get; }
+
+		public string Description { get; }
 	}
 }

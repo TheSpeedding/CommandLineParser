@@ -19,6 +19,8 @@ namespace CMDParser.Internals.Options
 
 		public Action<TParsedType> Callback { get; set; } = _ => { };
 
+		public string Description { get; set; } = string.Empty;
+
 		public OptionSetup(Option option, IParserMethodsView parsers)
 		{
 			OptionIdentifier = option;

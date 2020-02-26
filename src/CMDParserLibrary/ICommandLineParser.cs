@@ -6,8 +6,8 @@ namespace CMDParser
 {
 	public interface ICommandLineParser
 	{
-		IEnumerable<string> Parse(string[] args);
+		IStructuralizedHelp Help { get; }
 
-		string PrintHelp();
+		IEnumerable<string> Parse(string[] args);
 	}
 }

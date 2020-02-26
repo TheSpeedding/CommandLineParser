@@ -19,12 +19,10 @@ namespace CMDParser.Internals
 		{
 			_optionParsers = optionParsers;
 			_optionInfos = optionInfos;
+			Help = new StructuralizedHelp(optionInfos.Values);
 		}
 
-		public string PrintHelp()
-		{
-			throw new NotImplementedException();
-		}
+		public IStructuralizedHelp Help { get; }
 
 		public IEnumerable<string> Parse(string[] args)
 		{
