@@ -27,7 +27,22 @@ namespace CMDParser
 
 		public OptionSetupBuilder<TParsedType> SetupOption<TParsedType>(params Option[] option)
 		{
-			var optionSetups = option.Select(x => new OptionSetup<TParsedType>(x, _parserMethods)).ToArray();
+			return new OptionSetupBuilder<TParsedType>(PrepareOptionSetups<TParsedType>(option));
+		}
+
+		public FlagOptionBuilder SetupOption(params Option[] option)
+		{
+			return new FlagOptionBuilder(PrepareOptionSetups<Void>(option));
+		}
+
+		public ICommandLineParser CreateParser()
+		{
+			return new CommandLineParser(_options, _optionsApperance);
+		}
+
+		private IReadOnlyCollection<OptionSetup<T>> PrepareOptionSetups<T>(Option[] option)
+		{
+			var optionSetups = option.Select(x => new OptionSetup<T>(x, _parserMethods)).ToArray();
 
 			foreach (var o in optionSetups)
 			{
@@ -35,17 +50,7 @@ namespace CMDParser
 				_optionsApperance.Add(o.OptionIdentifier, () => o.OptionAppearance);
 			}
 
-			return new OptionSetupBuilder<TParsedType>(optionSetups);
-		}
-
-		public OptionSetupBuilder<Void> SetupOption(params Option[] option)
-		{
-			return SetupOption<Void>(option);
-		}
-
-		public ICommandLineParser CreateParser()
-		{
-			return new CommandLineParser(_options, _optionsApperance);
+			return optionSetups;
 		}
 	}
 }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CMDParser.Internals.Options
 {
-	class OptionSetup<TParsedType> : IOptionSetup<TParsedType>
+	internal class OptionSetup<TParsedType> : IOptionSetup<TParsedType>
 	{
 		private readonly IParserMethodsView _parsers;
 
