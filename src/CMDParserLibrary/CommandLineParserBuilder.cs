@@ -9,20 +9,23 @@ namespace CMDParser
 {
 	public class CommandLineParserBuilder
 	{
-		private readonly ParserMethodsCollection _parsers = new ParserMethodsCollection();
-		private readonly ISet<IOptionSetup> _options = new HashSet<IOptionSetup>();
+		// For example, `int.Parse(System.String)` can appear in this collection.
+		private readonly ParserMethodsCollection _parserMethods = new ParserMethodsCollection();
+
+		// A collection of method that can parse options. Returns `true` when parsed successfully.
+		private readonly HashSet<Func<InputProcessor, bool>> _options = new HashSet<Func<InputProcessor, bool>>();
 
 		public void RegisterParser<TParsedType>(Func<string, TParsedType> parser)
 		{
-			_parsers.RegisterParseMethod(parser);
+			_parserMethods.RegisterParseMethod(parser);
 		}
 
 		public OptionSetupBuilder<TParsedType> SetupOption<TParsedType>(params Option[] option)
 		{
-			var optionSetups = option.Select(x => new OptionSetup(x, _parsers));
+			var optionSetups = option.Select(x => new OptionSetup<TParsedType>(x, _parserMethods)).ToArray();
 
 			foreach (var o in optionSetups)
-				_options.Add(o);
+				_options.Add(o.TryParse);
 
 			return new OptionSetupBuilder<TParsedType>(optionSetups);
 
@@ -30,7 +33,7 @@ namespace CMDParser
 
 		public ICommandLineParser CreateParser()
 		{
-			return new CommandLineParser(_parsers);
+			return new CommandLineParser(_parserMethods, _options);
 		}
 	}
 }

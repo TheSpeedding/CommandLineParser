@@ -1,15 +1,16 @@
 ﻿using CMDParser.Internals.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CMDParser
 {
 	public class OptionSetupBuilder<TParsedType>
 	{
-		private readonly IEnumerable<OptionSetup> _setup;
+		private readonly IReadOnlyCollection<OptionSetup<TParsedType>> _setup;
 
-		internal OptionSetupBuilder(IEnumerable<OptionSetup> setup)
+		internal OptionSetupBuilder(IReadOnlyCollection<OptionSetup<TParsedType>> setup)
 		{
 			_setup = setup;
 		}
@@ -33,7 +34,7 @@ namespace CMDParser
 		public OptionSetupBuilder<TParsedType> Callback(Action<TParsedType> callback)
 		{
 			foreach (var s in _setup)
-				s.Callback = x => callback((TParsedType)x);
+				s.Callback = callback;
 
 			return this;
 		}
