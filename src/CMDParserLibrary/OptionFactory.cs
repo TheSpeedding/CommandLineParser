@@ -6,12 +6,12 @@ namespace CMDParser
 {
 	public static class OptionFactory
 	{
-		public static IOption Short(char identifier)
+		public static Option Short(char identifier)
 		{
 			throw new NotImplementedException();
 		}
 
-		public static IOption Long(string identifier)
+		public static Option Long(string identifier)
 		{
 			throw new NotImplementedException();
 		}

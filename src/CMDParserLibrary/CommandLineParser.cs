@@ -14,7 +14,7 @@ namespace CMDParser
 			_parsers.RegisterParseMethod(parser);
 		}
 
-		public OptionSetupBuilder<TParsedType> SetupOption<TParsedType>(params IOption[] option)
+		public OptionSetupBuilder<TParsedType> SetupOption<TParsedType>(params Option[] option)
 		{
 			throw new NotImplementedException();
 		}
@@ -22,6 +22,8 @@ namespace CMDParser
 		public void Parse(string[] args)
 		{
 			var inputProcessor = new InputProcessor(args);
+
+			inputProcessor.GetRemainingInput().StartsWith
 		}
 	}
 }

@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace CMDParser.Internals.Options
 {
-	internal class LongOption : IOption
+	internal class LongOption : Option
 	{
-		public string Identifier => throw new NotImplementedException();
+		protected override string Prefix => "--";
+
+		public LongOption(string id) : base(id)
+		{
+		}
 	}
 }
