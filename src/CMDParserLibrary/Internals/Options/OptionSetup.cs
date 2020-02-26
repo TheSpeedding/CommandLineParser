@@ -36,25 +36,24 @@ namespace CMDParser.Internals.Options
 					// Option is present at input, but accepts no arguments, thus is intended to return `true`.
 					case ParameterAppearance.None:
 						Callback(default!);
-						break;
+						return true;
 
 					case ParameterAppearance.Optional:
 						if (input.CurrentToken.StartsWith(LongOption.OptionPrefix) || input.CurrentToken.StartsWith(ShortOption.OptionPrefix))
 						{
 							// Then the argument is non-present, skip it.
 							Callback(default!);
-							break;
 						}
 						else
 						{
 							// Otherwise the argument is present.
 							Callback(ParseArgument(input));
 						}
-						break;
+						return true;
 
 					case ParameterAppearance.Required:
 						Callback(ParseArgument(input));
-						break;
+						return true;
 				}
 			}
 

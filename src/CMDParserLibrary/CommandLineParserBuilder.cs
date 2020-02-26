@@ -33,7 +33,7 @@ namespace CMDParser
 
 		public ICommandLineParser CreateParser()
 		{
-			return new CommandLineParser(_parserMethods, _options);
+			return new CommandLineParser(_options);
 		}
 	}
 }

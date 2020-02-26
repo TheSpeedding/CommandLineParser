@@ -7,12 +7,10 @@ namespace CMDParser.Internals
 {
 	class CommandLineParser : ICommandLineParser
 	{
-		private readonly IParserMethodsView _parsers;
 		private readonly IReadOnlyCollection<Func<InputProcessor, bool>> _options;
 
-		public CommandLineParser(IParserMethodsView parsers, IReadOnlyCollection<Func<InputProcessor, bool>> options)
+		public CommandLineParser(IReadOnlyCollection<Func<InputProcessor, bool>> options)
 		{
-			_parsers = parsers;
 			_options = options;
 		}
 
