@@ -22,5 +22,13 @@ namespace CMDParser
 
 			return Instance;
 		}
+
+		public OptionSetupBuilder<TParsedType> Callback(Action<TParsedType> callback)
+		{
+			foreach (var s in Setup)
+				s.Callback = callback;
+
+			return Instance;
+		}
 	}
 }

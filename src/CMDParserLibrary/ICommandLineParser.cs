@@ -8,6 +8,6 @@ namespace CMDParser
 	{
 		IStructuralizedHelp Help { get; }
 
-		IEnumerable<string> Parse(string[] args);
+		IReadOnlyList<string> Parse(string[] args);
 	}
 }

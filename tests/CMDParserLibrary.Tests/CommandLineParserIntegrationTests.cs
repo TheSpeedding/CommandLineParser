@@ -30,7 +30,7 @@ namespace CMDParser.Tests
 		private static ICommandLineParser CreateTimeCommandParser(TimeCommandLine output)
 		{
 			var parserBuilder = new CommandLineParserBuilder();
-
+			
 			parserBuilder.SetupOption<string>(Short('f'), Long("format"))
 				.WithDescription("Specify output format, possibly overriding the format specified in the environment variable TIME.")
 				.Callback(format => output.OutputFormat = format)
@@ -38,7 +38,7 @@ namespace CMDParser.Tests
 
 			parserBuilder.SetupOption(Short('p'), Long("portability"))
 				.WithDescription("Use the portable output format.")
-				.Callback(_ => output.IsPortable = true);
+				.Callback(() => output.IsPortable = true);
 
 			parserBuilder.SetupOption<string>(Short('o'), Long("output"))
 				.Callback(file => output.OutputFile = file)
@@ -47,19 +47,19 @@ namespace CMDParser.Tests
 
 			parserBuilder.SetupOption(Short('a'), Long("append"))
 				.WithDescription("(Used together with -o.) Do not overwrite but append.")
-				.Callback(_ => output.ShouldAppend = true);
+				.Callback(() => output.ShouldAppend = true);
 
 			parserBuilder.SetupOption(Short('v'), Long("verbose"))
 				.WithDescription("Give very verbose output about all the program knows about.")
-				.Callback(isVerbose => output.IsOutputVerbose = true);
+				.Callback(() => output.IsOutputVerbose = true);
 
 			parserBuilder.SetupOption(Long("help"))
 				.WithDescription("Print a usage message on standard output and exit successfully.")
-				.Callback(_ => output.ShouldPrintHelp = true);
+				.Callback(() => output.ShouldPrintHelp = true);
 
 			parserBuilder.SetupOption(Short('V'), Long("version"))
 				.WithDescription("Print version information on standard output, then exit successfully.")
-				.Callback(_ => output.ShouldPrintVersion = true);
+				.Callback(() => output.ShouldPrintVersion = true);
 
 			return parserBuilder.CreateParser();
 		}

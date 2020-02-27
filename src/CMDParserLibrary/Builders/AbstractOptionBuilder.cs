@@ -32,13 +32,5 @@ namespace CMDParser.Builders
 
 			return Instance;
 		}
-
-		public TBuilder Callback(Action<TParsedType> callback)
-		{
-			foreach (var s in Setup)
-				s.Callback = callback;
-
-			return Instance;
-		}
 	}
 }

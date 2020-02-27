@@ -19,12 +19,13 @@ namespace CMDParser.Internals
 		{
 			_optionParsers = optionParsers;
 			_optionInfos = optionInfos;
+
 			Help = new StructuralizedHelp(optionInfos.Values);
 		}
 
 		public IStructuralizedHelp Help { get; }
 
-		public IEnumerable<string> Parse(string[] args)
+		public IReadOnlyList<string> Parse(string[] args)
 		{
 			var input = new InputProcessor(args);
 

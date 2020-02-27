@@ -10,7 +10,7 @@ namespace CMDParser.Internals
 		private readonly IReadOnlyList<string> _input;
 		private int _currentIndex;
 
-		public InputProcessor(string[] args)
+		public InputProcessor(IEnumerable<string> args)
 		{
 			_currentIndex = 0;
 

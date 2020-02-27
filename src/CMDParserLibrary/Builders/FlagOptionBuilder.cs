@@ -13,5 +13,13 @@ namespace CMDParser
 		}
 
 		protected override FlagOptionBuilder Instance => this;
+
+		public FlagOptionBuilder Callback(Action callback)
+		{
+			foreach (var s in Setup)
+				s.Callback = _ => callback();
+
+			return Instance;
+		}
 	}
 }
