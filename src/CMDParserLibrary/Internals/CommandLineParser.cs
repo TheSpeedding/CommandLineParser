@@ -1,30 +1,54 @@
-﻿using CMDParser.Internals.Options;
-using System;
+using CMDParser.Internals.Extensions;
+using CMDParser.Internals.Options;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 
 namespace CMDParser.Internals
 {
-	class CommandLineParser : ICommandLineParser
+	/// <inheritdoc/>
+	internal class CommandLineParser : ICommandLineParser
 	{
+		/// <summary>
+		/// A delimiter between the options and the command arguments.
+		/// </summary>
 		private const string ArgumentsDelimiter = "--";
 
-		private readonly IReadOnlyDictionary<Option, Func<InputProcessor, bool>> _optionParsers;
-		private readonly IReadOnlyDictionary<Option, IOptionInfo> _optionInfos;
+		// Maps option identifier to a method that can parse given option argument.
+		// Parse methods are intentionally seperated because flag options do not have any parsers.
+		// Additionally, `IOptionInfo` does not implement `IParsable`, only `IOptionInfo<T>` does.
+		private readonly IReadOnlyDictionary<IOption, IParsable> _optionParsers;
 
-		public CommandLineParser(IReadOnlyDictionary<Option, Func<InputProcessor, bool>> optionParsers,
-			IReadOnlyDictionary<Option, IOptionInfo> optionInfos)
+		// Maps option identifier to more detailed information about given option.
+		private readonly IReadOnlyDictionary<IOption, IOptionInfo> _optionInfos;
+
+		// Maps option to all its aliases, inlcuding self.
+		private readonly IReadOnlyDictionary<IOption, IEnumerable<IOption>> _optionAliases;
+
+		/// <summary>
+		/// Creates a new <see cref="CommandLineParser"/> instance.
+		/// </summary>
+		/// <param name="optionParsers">A mapping from option identifier to the function which can parse the option.</param>
+		/// <param name="optionInfos">A mapping from option identifier to more detailed information for the option.</param>
+		/// <param name="optionAliases">A mapping from option identifier to all its aliases.</param>
+		/// <param name="commandName">Name of the command.</param>
+		public CommandLineParser(
+			IReadOnlyDictionary<IOption, IParsable> optionParsers,
+			IReadOnlyDictionary<IOption, IOptionInfo> optionInfos,
+			IReadOnlyDictionary<IOption, IEnumerable<IOption>> optionAliases,
+			string commandName)
 		{
 			_optionParsers = optionParsers;
 			_optionInfos = optionInfos;
+			_optionAliases = optionAliases;
 
-			Help = new StructuralizedHelp(optionInfos.Values);
+			Help = new StructuralizedHelp(optionInfos.Values, commandName);
 		}
 
+		/// <inheritdoc/>
 		public IStructuralizedHelp Help { get; }
 
+		/// <inheritdoc/>
 		public IReadOnlyList<string> Parse(string[] args)
 		{
 			var input = new InputProcessor(args);
@@ -36,7 +60,7 @@ namespace CMDParser.Internals
 				.ToHashSet();
 
 			// Auxilary set for options that were already parsed (to prevent parsing the same option multiple times).
-			var alreadyParsed = new HashSet<Option>();
+			var alreadyParsed = new HashSet<IOption>();
 
 			// Denotes whether the delimiter for arguments has already been reached or not.
 			var delimiterReached = false;
@@ -48,23 +72,29 @@ namespace CMDParser.Internals
 				if (input.CurrentToken == ArgumentsDelimiter)
 				{
 					delimiterReached = true;
+					input.MoveNext();
 				}
-				if (TryParseOption(input, mandatoryOptions, out var parsedOption))
+
+				else if (TryParseOption(input, delimiterReached, out var parsedOption))
 				{
-					if (alreadyParsed.Contains(parsedOption))
+					// We have found a parser which can parse this option (and it has parsed successfully).
+					// Remove it from a set of mandatory options (to mark that we have already parsed it).
+					mandatoryOptions.RemoveAll(_optionAliases[parsedOption]);
+
+					// At this point, option is parsed, which is good.
+					// But it can be parsed for the second time, which is not that good.
+					if (!alreadyParsed.AddAll(_optionAliases[parsedOption]))
 					{
 						throw new IncorrectInputException(
-							$"The option { input.CurrentToken } cannot be parsed multiple times.");
-					}
-					else
-					{
-						alreadyParsed.Add(parsedOption);
+							$"The option { parsedOption.Identifier } cannot be parsed multiple times.");
 					}
 				}
+
 				else if (TryParseArgument(input, delimiterReached, out var argument))
 				{
 					parsedArguments.Add(argument);
 				}
+
 				else
 				{
 					throw new IncorrectInputException(
@@ -90,6 +120,7 @@ namespace CMDParser.Internals
 				input.MoveNext();
 				return true;
 			}
+
 			else
 			{
 				argument = null;
@@ -97,17 +128,17 @@ namespace CMDParser.Internals
 			}
 		}
 
-		private bool TryParseOption(InputProcessor input, ISet<Option> mandatoryOptions, [NotNullWhen(true)] out Option? parsedOption)
+		private bool TryParseOption(InputProcessor input, bool delimiterReached, [NotNullWhen(true)] out IOption? parsedOption)
 		{
-			foreach (var (option, optionParser) in _optionParsers)
+			if (!delimiterReached)
 			{
-				if (optionParser(input))
+				foreach (var (option, optionParser) in _optionParsers)
 				{
-					// We have found a parser which can parse this option (and it has parsed successfully).
-					// Remove it from a set of mandatory options (to mark that we have already parsed it).
-					mandatoryOptions.Remove(option);
-					parsedOption = option;
-					return true;
+					if (optionParser.TryParse(input))
+					{
+						parsedOption = option;
+						return true;
+					}
 				}
 			}
 

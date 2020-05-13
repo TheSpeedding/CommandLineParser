@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CMDParser.Internals.Options
+﻿namespace CMDParser.Internals.Options
 {
-	enum Appearance
+	/// <summary>
+	/// Defines appearance of the item (e.g., option and parameter).
+	/// </summary>
+	internal enum Appearance
 	{
 		Optional,
 		Required

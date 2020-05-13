@@ -1,0 +1,1 @@
+Testovací projekt obsahuje zejména testy těch metod a tříd, které nejsou testovány dodanými testy od jiných studentů, tzn. zejména unit testy interních struktur. Dodané testy veřejného API jsou velmi dobré a nepovažujeme za nutné psát testy na tytéž scénáře, které testují dodané testy. Našim testovacím projektem jsme se rozhodli dodané testy pouze rozšířit.

@@ -216,7 +216,6 @@
     <Rule Id="S3433" Action="None" />
     <Rule Id="S3440" Action="None" />
     <Rule Id="S3441" Action="None" />
-    <Rule Id="S3442" Action="None" />
     <Rule Id="S3443" Action="None" />
     <Rule Id="S3444" Action="None" />
     <Rule Id="S3445" Action="None" />

@@ -1,3 +1,4 @@
+using CMDParser.Builders;
 using System;
 using Xunit;
 
@@ -29,8 +30,8 @@ namespace CMDParser.Tests
 		#region Helper methods
 		private static ICommandLineParser CreateTimeCommandParser(TimeCommandLine output)
 		{
-			var parserBuilder = new CommandLineParserBuilder();
-			
+			var parserBuilder = new CommandLineParserBuilder("time");
+						
 			parserBuilder.SetupOption<string>(Short('f'), Long("format"))
 				.WithDescription("Specify output format, possibly overriding the format specified in the environment variable TIME.")
 				.Callback(format => output.OutputFormat = format)
@@ -89,8 +90,8 @@ namespace CMDParser.Tests
 			Assert.Contains("arg1", parsedArgs);
 			Assert.Contains("--arg2", parsedArgs);
 
-			Assert.Equal(
-				"\"-f\", \"--format\": Specify output format, possibly overriding the format specified in the environment variable TIME." +
+			Assert.Equal("time" +
+				Environment.NewLine + "\"-f\", \"--format\": Specify output format, possibly overriding the format specified in the environment variable TIME." +
 				Environment.NewLine + "\"-p\", \"--portability\": Use the portable output format." +
 				Environment.NewLine + "\"-o\", \"--output\": Do not send the results to stderr, but overwrite the specified file." +
 				Environment.NewLine + "\"-a\", \"--append\": (Used together with -o.) Do not overwrite but append." +
